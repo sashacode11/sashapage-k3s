@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sashapage
+spec:
+  selector:
+    matchLabels:
+      app: sashapage
+  template:
+    metadata:
+      labels:
+        app: sashapage
+    spec:
+      containers:
+        - name: sashapage
+          image: sasha444/sashapage:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://mongo-service:27017/NodeJs.Blog'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sashapage-service
+spec:
+  selector:
+    app: sashapage
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30007
+  type: LoadBalancer
